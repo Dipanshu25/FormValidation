@@ -13,6 +13,7 @@ function App() {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
     const res = validate(formValues);
+
     //setFormErrors(res);
   };
 
@@ -37,14 +38,12 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = validate(formValues);
-
     if (Object.keys(res).length === 0) {
       push();
       console.log("no error");
-    } else {
-      setFormValues(res);
-      console.log("invalid data");
+      setIsSubmit(true);
     }
+    setFormErrors(res);
   };
   useEffect(() => {}, []);
   const validate = (values) => {
@@ -106,7 +105,7 @@ function App() {
               onChange={handleChange}
             />
           </div>
-          <p>{formErrors.username}</p>
+          <p>{formErrors.email}</p>
           <div className="field">
             <label>Phone</label>
             <input
