@@ -12,9 +12,6 @@ function App() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    const res = validate(formValues);
-
-    //setFormErrors(res);
   };
 
   const push = async () => {
@@ -27,13 +24,6 @@ function App() {
         console.log(error);
       });
   };
-  // const demo = async () => {
-  //   let res = await axios
-  //     .get("http://localhost:5007/default")
-  //     .then((data) => data.data);
-
-  //   console.log(res);
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,10 +37,17 @@ function App() {
   };
   useEffect(() => {}, []);
   const validate = (values) => {
+    var upperCaseLetters = /[A-Z]/g;
+    var numbers = /[0-9]/g;
+    var phoneno = /^\d{10}$/;
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!values.username) {
       errors.username = "Username is required!";
+    } else if (values.username.length < 3) {
+      errors.username = "username must be more than 4 characters";
+    } else if (values.username.length > 10) {
+      errors.username = "username cannot exceed more than 15 characters";
     }
     if (!values.email) {
       errors.email = "Email is required!";
@@ -62,12 +59,21 @@ function App() {
     } else if (values.password.length < 4) {
       errors.password = "Password must be more than 4 characters";
     } else if (values.password.length > 10) {
-      errors.password = "Password cannot exceed more than 10 characters";
+      errors.password =
+        "INVALID PASSWORD: Password cannot exceed more than 10 characters";
+    } else if (!values.password.match(upperCaseLetters)) {
+      errors.password =
+        "INVALID PASSWORD: Password must contain atleast one upper case character";
+    } else if (!values.password.match(numbers)) {
+      errors.password =
+        "INVALID PASSWORD: Password must contain atleast one number digit";
     }
+
     if (!values.phone) {
       errors.phone = "phone number is required";
-    } else if (values.phone.length !== 10)
-      errors.phone = "Enter a 10 digit number";
+    } else if (!values.phone.match(phoneno)) {
+      errors.phone = "Enter a valid phone number";
+    }
 
     return errors;
   };
